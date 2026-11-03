@@ -6,11 +6,17 @@ Public frontend of [cosmonet.smkxtpwdnn.chatgpt.site](https://cosmonet.smkxtpwdn
 
 Requires Python 3. No third-party packages are needed.
 
+Open Terminal in the project folder containing `index.html`, then run:
+
 ```sh
 python3 -m http.server 8000
 ```
 
-Open http://localhost:8000/ in your browser. Serve the project over HTTP because links and asset paths start at the website root.
+Keep this Terminal window open while using the website. Pressing Ctrl+C or closing the server stops it.
+
+Open http://localhost:8000/ in your browser, then use the website navigation. All pages share this server, including `/case-studies/` and `/services/security-engineering/`. Serve the project over HTTP because links and asset paths start at the website root.
+
+If the browser shows `ERR_CONNECTION_REFUSED`, restart the server with the command above. If you run the server on a different port, use that same port in the browser URL.
 
 ## Build and deploy
 
