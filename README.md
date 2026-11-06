@@ -8,12 +8,20 @@ The page shows a receipt only after the enquiry and both email jobs have been sa
 
 Use Node.js 24.x and Python 3.10 or newer.
 
+Open Terminal in the project folder containing `package.json`, then run:
+
 ```sh
 npm ci
 npm run dev
 ```
 
 Open http://localhost:3000/. The development command loads `.env` through dotenv and builds the static files before starting Node. Start from `.env.example`, use `SITE_URL=http://localhost:3000`, and keep local data in `.data`. Run `npm run build` after changes to the static website files, then refresh the browser.
+
+Keep this Terminal window open while using the website. Pressing Ctrl+C or closing the server stops it.
+
+All pages share this server, including `/case-studies/` and `/services/security-engineering/`. Use the website navigation after opening the local URL; links and asset paths start at the website root.
+
+If the browser shows `ERR_CONNECTION_REFUSED`, run `npm run dev` again in the project folder and leave the server running. Check Terminal for startup errors if it stops. If you run the server on a different port, use that same port in the browser URL.
 
 If npm stalls while reading a cloud-only `package.json` in a parent folder on macOS, use `npm --prefix . run dev` from this repository. This selects the project directly. To use another port, set both values, for example `PORT=3018 SITE_URL=http://localhost:3018 npm --prefix . run dev`.
 
