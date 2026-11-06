@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: cosmonet-website
+    runtime: node
+    plan: 0.5c-512mb
+    numInstances: 1
+    buildCommand: npm ci --omit=dev && python3 build.py --production
+    startCommand: npm start
+    healthCheckPath: /healthz
+    disk:
+      name: cosmonet-enquiries
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /var/data
+      - key: SITE_URL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM
+        sync: false
+      - key: LEADS_TO
+        value: hello@cosmonet.ai
+      - key: HASH_SECRET
+        generateValue: true
+      - key: OPS_TOKEN
+        generateValue: true
+      - key: TURNSTILE_SITE_KEY
+        sync: false
+      - key: TURNSTILE_SECRET_KEY
+        sync: false
+      - key: TRUST_PROXY_HOPS
+        value: "1"
+      - key: EMAIL_SEND_INTERVAL_MS
+        value: "600"

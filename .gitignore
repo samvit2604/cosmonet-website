@@ -6,3 +6,11 @@ __pycache__/
 .env.*
 !.env.example
 .openai/
+node_modules/
+test-results/
+.gitignore.before-web3forms
+.cloud-placeholder-backup/
+.data/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm

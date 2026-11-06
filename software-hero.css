@@ -1,0 +1,177 @@
+/* Software-development hero only. The track visual supports the existing enquiry flow. */
+.software-hero .breadcrumbs { margin-bottom: 38px; }
+.software-hero .page-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 44px;
+  min-height: 530px;
+}
+.software-hero .software-hero-copy { min-width: 0; }
+.software-hero h1 { font-size: clamp(46px, 4.2vw, 62px); letter-spacing: -.055em; line-height: 1.1; }
+.software-hero .lead { --copy-size: 18px; max-width: 560px; }
+.software-hero .software-hero-scene {
+  position: relative;
+  margin: 0;
+  min-width: 0;
+  align-self: center;
+}
+.software-hero-viewport {
+  position: relative;
+  height: clamp(430px, 40vw, 565px);
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 4px;
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+.software-hero-viewport canvas,
+.software-hero-viewport img {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.software-hero-viewport canvas { opacity: 0; transition: opacity 350ms ease; }
+.software-hero-viewport img { opacity: 1; transition: opacity 350ms ease; }
+.software-scene-ready .software-hero-viewport canvas { opacity: 1; }
+.software-scene-ready .software-hero-viewport img { opacity: 0; }
+.software-scene-fallback .software-hero-viewport canvas { display: none; }
+.software-scene-fallback .software-hero-viewport img { opacity: 1; }
+.software-hero-scene figcaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 7px 0;
+  color: #7a6889;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.software-scene-caption { display: flex; align-items: center; gap: 10px; letter-spacing: 1.2px; }
+.software-scene-caption::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: #8d50c4; }
+.software-scene-motion {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid #b6a6c44d;
+  border-radius: 5px;
+  background: #ffffff42;
+  color: #66516f;
+  font-size: 10px;
+  line-height: 1.5;
+  cursor: pointer;
+  visibility: hidden;
+}
+.software-scene-ready .software-scene-motion { visibility: visible; }
+.software-scene-fallback .software-scene-motion { visibility: hidden; }
+.software-scene-motion:hover { color: #542b78; border-color: #9874b580; }
+.software-scene-motion svg { width: 13px; height: 13px; }
+.software-scene-motion .software-motion-play { display: none; }
+.software-scene-motion[aria-pressed="true"] .software-motion-pause { display: none; }
+.software-scene-motion[aria-pressed="true"] .software-motion-play { display: block; }
+
+@media (min-width: 1600px) {
+  .software-hero .page-hero-grid { gap: 54px; }
+}
+@media (max-width: 1200px) {
+  .software-hero .page-hero-grid { gap: 30px; min-height: 490px; }
+  .software-hero .lead { --copy-size: 17px; }
+  .software-hero-viewport { height: 470px; }
+}
+@media (max-width: 900px) {
+  .software-hero .page-hero-grid { grid-template-columns: 1fr; gap: 23px; min-height: 0; }
+  .software-hero h1 { font-size: clamp(44px, 6.8vw, 58px); }
+  .software-hero .software-hero-copy { max-width: 660px; }
+  .software-hero .lead { max-width: 650px; }
+  .software-hero .software-hero-scene { width: min(100%, 650px); justify-self: center; }
+  .software-hero-viewport { height: 470px; }
+}
+@media (max-width: 700px) {
+  .software-hero .breadcrumbs { margin-bottom: 30px; }
+  .software-hero .page-hero-grid { gap: 25px; }
+  .software-hero h1 { font-size: clamp(39px, 9.8vw, 52px); letter-spacing: -.05em; }
+  .software-hero .lead { --copy-size: 17px; margin-top: 24px; }
+  .software-hero .tag-row { gap: 7px; }
+  .software-hero-viewport { height: clamp(305px, 87vw, 440px); }
+  .software-hero-scene figcaption { padding-top: 8px; font-size: 9px; gap: 10px; }
+  .software-scene-caption { letter-spacing: .8px; gap: 8px; }
+  .software-scene-motion { min-height: 40px; font-size: 9px; padding: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .software-scene-motion { display: none; }
+  .software-hero-viewport canvas, .software-hero-viewport img { transition: none; }
+}
+
+/* Match the supplied reference's full grey-lilac floor and warm studio light. */
+.page-hero.software-hero {
+  position: relative;
+  isolation: isolate;
+  background-color: #c7c6d3;
+  background-image: none;
+}
+.software-hero > .wrap { position: relative; z-index: 2; pointer-events: none; }
+.software-hero .software-hero-copy,
+.software-hero .breadcrumbs { pointer-events: auto; }
+.software-hero .lead { --copy-color: #494354; }
+.software-hero .breadcrumbs,
+.software-hero .breadcrumbs a { color: #51485d; }
+.software-hero h1 { color: #17152c; }
+.software-hero h1 em { background-image: linear-gradient(110deg, #9a176f, #7033c7 55%, #294bc0); }
+.software-hero .software-hero-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+.software-hero-viewport { position: absolute; inset: 0; height: 100%; mask-image: none; border-radius: 0; }
+.software-hero-viewport video {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+.software-scene-ready .software-hero-viewport video { opacity: 1; }
+.software-scene-fallback .software-hero-viewport video { opacity: 0; }
+.software-hero-scene figcaption {
+  position: absolute;
+  bottom: 24px;
+  left: 54%;
+  right: max(40px, calc((100vw - 1280px) / 2));
+  color: #5d4c70;
+}
+.software-scene-motion { pointer-events: auto; color: #584364; background: #ffffff55; }
+@media (max-width: 900px) {
+  .software-hero .software-hero-scene { position: relative; inset: auto; width: 100%; margin-top: 25px; }
+  .software-hero-viewport { position: relative; height: 430px; }
+  .software-hero-viewport video,
+  .software-hero-viewport img { object-position: right center; }
+  .software-hero-scene figcaption { position: static; padding: 13px 36px 0; }
+}
+@media (max-width: 700px) {
+  .software-hero-viewport { height: clamp(310px, 88vw, 420px); }
+  .software-hero-scene figcaption { padding: 12px 20px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .software-hero-viewport video { transition: none; }
+}
+.page-hero.software-hero {
+  background-image: radial-gradient(ellipse at 70% 20%, #fff4e6bb, transparent 65%);
+}
+.software-hero .software-hero-scene { height: 100%; min-height: 100%; align-self: stretch; }
+.page-hero.software-hero h1 em { background-image: linear-gradient(110deg, #9a176f, #7033c7 55%, #294bc0); }
+.page-hero.software-hero .breadcrumbs,
+.page-hero.software-hero .breadcrumbs a { color: #51485d; }
+@media (max-width: 900px) {
+  .software-hero .software-hero-scene { height: auto; min-height: 0; }
+}
+
+.software-hero-scene figcaption { justify-content: flex-end; }

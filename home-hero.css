@@ -1,0 +1,364 @@
+/* Homepage only: Cosmonet's connected software, AI and banking systems. */
+.cosmo-hero {
+  --copy-color: #bcb7ca;
+  --copy-size: 19px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 72% 42%, #7134c817, transparent 55%),
+    radial-gradient(ellipse at 91% 70%, #2765de0c, transparent 50%),
+    #090b15;
+  color: #fff;
+}
+
+.cosmo-hero-main {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 690px;
+  padding-top: 78px;
+  padding-bottom: 90px;
+}
+
+.cosmo-hero-copy {
+  position: relative;
+  z-index: 2;
+  width: 48%;
+  max-width: 590px;
+}
+
+.cosmo-hero .cosmo-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 28px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.8px;
+  line-height: 1.6;
+  color: #c5b1db;
+}
+
+.cosmo-eyebrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: #c58df2;
+  box-shadow: 0 0 12px #bb66e961;
+}
+
+.cosmo-hero h1 {
+  margin: 0;
+  font-size: clamp(62px, 6.1vw, 88px);
+  font-weight: 500;
+  letter-spacing: -.064em;
+  line-height: 1.07;
+}
+
+.cosmo-hero h1 > span {
+  display: block;
+  color: #d9bbf2;
+}
+
+.cosmo-hero-description {
+  margin-top: 29px;
+  max-width: 450px;
+}
+
+.cosmo-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 22px 27px;
+  margin-top: 32px;
+}
+
+.cosmo-cta {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  min-height: 55px;
+  padding: 14px 21px;
+  border: 1px solid #ffffff13;
+  border-radius: 7px;
+  background: var(--brand-action, linear-gradient(110deg, #af2487, #753bd2 54%, #365cb8));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  transition: box-shadow 180ms ease, transform 180ms ease;
+}
+
+.cosmo-cta > span { font-size: 24px; line-height: 1; }
+.cosmo-cta:hover { box-shadow: 0 5px 28px #8a3ee740; transform: translateY(-2px); }
+
+.cosmo-explore {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 48px;
+  color: #e2d9ea;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.cosmo-explore > span { font-size: 21px; }
+.cosmo-explore:hover { color: #fff; }
+
+.cosmo-scene {
+  position: absolute;
+  z-index: -1;
+  top: -35px;
+  bottom: 0;
+  left: 38%;
+  right: -7%;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(90deg, transparent, #000 13%, #000 91%, transparent);
+}
+
+.cosmo-scene::after {
+  position: absolute;
+  content: "";
+  z-index: 2;
+  inset: auto 0 0;
+  height: 95px;
+  background: linear-gradient(transparent, #090b15);
+}
+
+.cosmo-scene canvas,
+.cosmo-scene img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+}
+
+.cosmo-scene canvas { opacity: 0; transition: opacity 400ms ease; }
+.cosmo-scene img { opacity: 1; transition: opacity 400ms ease; }
+.scene-ready .cosmo-scene canvas { opacity: 1; }
+.scene-ready .cosmo-scene img { opacity: 0; }
+.scene-fallback .cosmo-scene canvas { display: none; }
+.scene-fallback .cosmo-scene img { opacity: 1; }
+
+.cosmo-scene-notes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  position: absolute;
+  z-index: 3;
+  left: 53%;
+  right: 0;
+  bottom: 29px;
+}
+
+.cosmo-scene-caption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 10px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 1.4px;
+  color: #a298b7;
+}
+
+.cosmo-scene-caption::before { content: ""; width: 28px; height: 1px; background: #807095; }
+
+.cosmo-motion {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid #ffffff24;
+  border-radius: 5px;
+  background: #12101cba;
+  color: #c5bbd4;
+  font-size: 10px;
+  line-height: 1.5;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.cosmo-motion svg { width: 13px; height: 13px; }
+.scene-ready .cosmo-motion { visibility: visible; }
+.scene-fallback .cosmo-motion { visibility: hidden; }
+.cosmo-motion:hover { border-color: #b59ac67a; color: #fff; }
+.cosmo-motion .motion-play { display: none; }
+.cosmo-motion[aria-pressed="true"] .motion-pause { display: none; }
+.cosmo-motion[aria-pressed="true"] .motion-play { display: block; }
+
+.cosmo-hero-rail {
+  position: relative;
+  z-index: 3;
+  border-top: 1px solid #ffffff1c;
+  background: #0e0d18;
+}
+
+.cosmo-hero-rail > .wrap {
+  display: grid;
+  grid-template-columns: 1.2fr repeat(3, 1fr);
+  align-items: center;
+  gap: 24px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.cosmo-rail-label { font-size: 10px; line-height: 1.7; letter-spacing: 1.2px; color: #9f94ae; }
+.cosmo-hero-rail a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-left: 24px;
+  min-height: 44px;
+  border-left: 1px solid #ffffff20;
+  font-size: 14px;
+  color: #ded6e7;
+}
+.cosmo-hero-rail a > span { color: #bf96df; font-size: 23px; }
+.cosmo-hero-rail a:hover { color: #fff; }
+
+@media (min-width: 1600px) {
+  .cosmo-hero-main { min-height: 730px; }
+  .cosmo-scene { left: 34%; right: -3%; }
+}
+
+@media (max-width: 1200px) {
+  .cosmo-hero-main { min-height: 640px; }
+  .cosmo-hero-copy { width: 51%; }
+  .cosmo-hero h1 { font-size: 6.5vw; }
+  .cosmo-hero-description { --copy-size: 18px; max-width: 410px; }
+  .cosmo-hero-actions { gap: 16px 22px; }
+  .cosmo-scene { left: 40%; right: -13%; }
+  .cosmo-scene-caption { font-size: 9px; letter-spacing: 1px; }
+  .cosmo-hero-rail > .wrap { gap: 18px; }
+  .cosmo-hero-rail a { padding-left: 18px; font-size: 13px; }
+}
+
+@media (max-width: 980px) {
+  .cosmo-hero-main { min-height: 610px; padding-top: 64px; padding-bottom: 80px; }
+  .cosmo-hero-copy { width: 55%; }
+  .cosmo-hero h1 { font-size: 6.8vw; }
+  .cosmo-hero .cosmo-eyebrow { font-size: 9px; letter-spacing: 1.2px; }
+  .cosmo-hero-description { --copy-size: 17px; margin-top: 23px; }
+  .cosmo-scene { left: 43%; right: -22%; }
+  .cosmo-hero-actions { flex-direction: column; align-items: flex-start; margin-top: 25px; gap: 10px; }
+  .cosmo-scene-notes { left: 58%; bottom: 23px; }
+  .cosmo-scene-caption { display: none; }
+  .cosmo-motion { margin-left: auto; }
+  .cosmo-hero-rail > .wrap { grid-template-columns: repeat(3, 1fr); gap: 18px; padding-top: 18px; padding-bottom: 18px; }
+  .cosmo-rail-label { display: none; }
+  .cosmo-hero-rail a { font-size: 12px; padding-left: 15px; }
+  .cosmo-hero-rail a:first-of-type { padding-left: 0; border: 0; }
+}
+
+@media (max-width: 700px) {
+  .cosmo-hero-main { display: block; padding-top: 44px; padding-bottom: 0; min-height: 0; }
+  .cosmo-hero-copy { width: 100%; max-width: 520px; }
+  .cosmo-hero .cosmo-eyebrow { margin-bottom: 21px; font-size: 10px; letter-spacing: 1.3px; }
+  .cosmo-hero h1 { font-size: clamp(48px, 11vw, 72px); letter-spacing: -.06em; line-height: 1.08; }
+  .cosmo-hero-description { --copy-size: 17px; margin-top: 23px; max-width: 450px; }
+  .cosmo-hero-actions { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px 20px; margin-top: 24px; }
+  .cosmo-cta { min-height: 52px; padding: 12px 17px; font-size: 13px; gap: 23px; }
+  .cosmo-explore { font-size: 13px; gap: 10px; }
+  .cosmo-scene { position: relative; z-index: 0; top: auto; bottom: auto; left: auto; right: auto; height: 365px; width: calc(100% + 40px); margin: 6px -20px 0; mask-image: linear-gradient(180deg, transparent, #000 12%, #000 85%, transparent); }
+  .cosmo-scene::after { height: 30px; }
+  .cosmo-scene-notes { left: 0; right: 0; bottom: 13px; }
+  .cosmo-scene-caption { display: flex; font-size: 8px; }
+  .cosmo-motion { min-height: 36px; padding: 6px 8px; font-size: 9px; }
+  .cosmo-hero-rail > .wrap { grid-template-columns: 1fr; gap: 0; padding-top: 5px; padding-bottom: 5px; }
+  .cosmo-hero-rail a,
+  .cosmo-hero-rail a:first-of-type { border-left: 0; border-bottom: 1px solid #ffffff1b; padding: 11px 0; min-height: 52px; font-size: 14px; }
+  .cosmo-hero-rail a:last-of-type { border-bottom: 0; }
+}
+
+@media (max-width: 370px) {
+  .cosmo-hero h1 { font-size: 44px; }
+  .cosmo-hero .cosmo-eyebrow { font-size: 9px; }
+  .cosmo-hero-description { --copy-size: 16px; }
+  .cosmo-scene { height: 320px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cosmo-motion { display: none; }
+  .cosmo-cta, .cosmo-scene canvas, .cosmo-scene img { transition: none; }
+}
+
+/* A quieter editorial frame for the sculptural brand centerpiece. */
+.cosmo-hero-main { min-height: 710px; padding-top: 90px; padding-bottom: 105px; }
+.cosmo-hero-copy { max-width: 570px; }
+.cosmo-hero .cosmo-eyebrow { margin-bottom: 31px; font-size: 10px; letter-spacing: 2.2px; color: #b5a4c6; }
+.cosmo-eyebrow::before { width: 5px; height: 5px; box-shadow: 0 0 10px #bb66e933; }
+.cosmo-hero h1 { font-size: clamp(62px, 5.9vw, 85px); font-weight: 450; line-height: 1.08; letter-spacing: -.065em; }
+.cosmo-hero h1 > span {
+  color: #d6bfeb;
+  background: linear-gradient(110deg, #f0e6f7 4%, #d8b6ef 56%, #a5baf1);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.cosmo-hero-description { --copy-size: 18px; --copy-color: #aca7bb; max-width: 435px; margin-top: 31px; }
+.cosmo-hero-actions { margin-top: 34px; gap: 20px 29px; }
+.cosmo-cta {
+  background: linear-gradient(110deg, #14101f, #161222) padding-box, var(--brand-action) border-box;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  min-height: 54px;
+  padding: 14px 20px;
+  box-shadow: inset 0 1px 0 #ffffff08, 0 6px 25px #09061140;
+}
+.cosmo-cta:hover { background: linear-gradient(110deg, #23152c, #1a1d39) padding-box, var(--brand-spectrum) border-box; box-shadow: 0 6px 28px #7d3eb825; }
+.cosmo-cta > span { color: #c8a5e8; }
+.cosmo-explore { font-size: 13px; color: #bdb5c9; }
+.cosmo-scene { top: -15px; left: 41%; right: -5%; }
+.cosmo-scene-notes { left: 54%; bottom: 32px; }
+.cosmo-scene-caption { letter-spacing: 1.7px; color: #8f859f; font-size: 9px; }
+.cosmo-motion { border-color: #ffffff14; background: #100e1880; color: #a59aae; }
+.cosmo-hero-rail { background: #0c0b15; }
+.cosmo-hero-rail > .wrap { padding-top: 21px; padding-bottom: 21px; }
+.cosmo-hero-rail a { color: #bdb4c9; font-size: 13px; }
+.cosmo-hero-rail a > span { color: #a487bf; font-size: 21px; }
+
+@media (min-width: 1600px) {
+  .cosmo-hero-main { min-height: 750px; }
+  .cosmo-scene { left: 37%; right: -1%; }
+}
+@media (max-width: 1200px) {
+  .cosmo-hero-main { min-height: 660px; padding-top: 75px; padding-bottom: 95px; }
+  .cosmo-hero h1 { font-size: 6.3vw; }
+  .cosmo-scene { left: 42%; right: -11%; }
+}
+@media (max-width: 980px) {
+  .cosmo-hero-main { min-height: 610px; padding-top: 62px; padding-bottom: 85px; }
+  .cosmo-hero h1 { font-size: 6.5vw; }
+  .cosmo-hero-description { --copy-size: 17px; max-width: 370px; }
+  .cosmo-hero-actions { gap: 8px; margin-top: 25px; }
+  .cosmo-scene { left: 45%; right: -19%; }
+  .cosmo-scene-notes { left: 58%; bottom: 22px; }
+  .cosmo-hero-rail a { font-size: 12px; }
+}
+@media (max-width: 700px) {
+  .cosmo-hero-main { min-height: 0; padding-top: 43px; padding-bottom: 0; }
+  .cosmo-hero .cosmo-eyebrow { margin-bottom: 23px; font-size: 9px; letter-spacing: 1.7px; }
+  .cosmo-hero h1 { font-size: clamp(48px, 11vw, 72px); line-height: 1.09; }
+  .cosmo-hero-description { --copy-size: 16px; max-width: 450px; margin-top: 24px; }
+  .cosmo-hero-actions { gap: 10px 19px; margin-top: 26px; }
+  .cosmo-cta { font-size: 13px; min-height: 51px; padding: 12px 17px; }
+  .cosmo-scene { top: auto; left: auto; right: auto; height: 350px; margin-top: 5px; }
+  .cosmo-scene-notes { left: 0; right: 0; bottom: 14px; }
+  .cosmo-scene-caption { font-size: 8px; }
+  .cosmo-hero-rail > .wrap { padding-top: 5px; padding-bottom: 5px; }
+  .cosmo-hero-rail a { font-size: 14px; }
+}
+@media (max-width: 370px) {
+  .cosmo-hero h1 { font-size: 44px; }
+  .cosmo-hero .cosmo-eyebrow { letter-spacing: 1.3px; }
+  .cosmo-scene { height: 315px; }
+}

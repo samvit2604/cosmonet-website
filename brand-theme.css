@@ -1,0 +1,116 @@
+/* The gradient O in the Cosmonet wordmark is the source of the accent palette. */
+:root {
+  --brand-magenta: #d91db8;
+  --brand-violet: #873bec;
+  --brand-blue: #2864ee;
+  --brand-spectrum: linear-gradient(115deg, var(--brand-magenta), var(--brand-violet) 52%, var(--brand-blue));
+  --brand-action: linear-gradient(110deg, var(--brand-magenta), var(--brand-violet) 54%, var(--brand-blue));
+  --brand-link-light: #693591;
+  --brand-link-dark: #ddc0f4;
+  --brand-focus: #a978ec;
+  --violet: var(--brand-violet);
+  --gradient: var(--brand-spectrum);
+}
+
+body { isolation: isolate; }
+
+/* Keep the O and its glow fixed while the content moves beneath them. */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 28% 40%, #d91db814, transparent 60%),
+    radial-gradient(ellipse at 70% 65%, #2864ee14, transparent 63%),
+    radial-gradient(ellipse at 52% 52%, #873bec10, transparent 68%);
+}
+
+body::after {
+  width: clamp(280px, 43vw, 620px);
+  aspect-ratio: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: conic-gradient(from -50deg, #d91db8, #873bec 18%, #2864ee 38%, #873bec 67%, #d91db8 91%, #d91db8);
+  mask-image: radial-gradient(circle, transparent 56%, #000 57%, #000 69%, transparent 70%);
+  filter: drop-shadow(0 0 48px #873bec30);
+  opacity: .06;
+}
+
+.primary,
+.button.primary { background: var(--brand-action); }
+.ink-gradient { background: var(--brand-spectrum); background-clip: text; -webkit-background-clip: text; color: transparent; }
+::selection { background: var(--brand-violet); color: #fff; }
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible { outline-color: var(--brand-focus); }
+
+main .eyebrow { color: var(--brand-link-light); }
+.page-hero:not(.fintech-hero) .eyebrow { color: var(--brand-link-light); }
+.page-hero:not(.fintech-hero) h1 em {
+  background-image: var(--brand-spectrum);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+.dark .eyebrow,
+.page-hero.fintech-hero .eyebrow,
+.home-hero .eyebrow,
+.contact-section .eyebrow { color: var(--brand-link-dark); }
+.section .text-link { color: var(--brand-link-light); }
+.section.dark .text-link,
+.section .cap-panel .text-link,
+.section .ai-scroll-card .text-link { color: var(--brand-link-dark); }
+.step-no,
+.card-top > span,
+.industry-grid > a > span:first-child,
+.tech-grid strong,
+.portfolio-copy > h3,
+.product-topics > span { color: var(--brand-link-light); }
+.section-nav-links a:hover,
+.section-nav-links a[aria-current="location"] {
+  color: var(--brand-link-light);
+  border-bottom-color: var(--brand-violet);
+}
+.reading-layout aside a[aria-current="location"] {
+  color: var(--brand-link-light);
+  border-left-color: var(--brand-violet);
+}
+.cap-nav > button[aria-selected="true"] { color: var(--brand-link-light); border-bottom-color: var(--brand-violet); }
+
+.soft,
+.home-capability {
+  background-image:
+    radial-gradient(ellipse at 12% 20%, #d91db811, transparent 55%),
+    radial-gradient(ellipse at 88% 75%, #2864ee10, transparent 58%);
+}
+
+:is(.dark, .page-hero:not(.fintech-hero), .page-hero.fintech-hero, .home-hero, .contact-section) {
+  background-image:
+    radial-gradient(ellipse at 16% 18%, #d91db80c, transparent 58%),
+    radial-gradient(ellipse at 84% 72%, #2864ee0c, transparent 60%);
+}
+
+.cta {
+  background-image:
+    radial-gradient(ellipse at 14% 80%, #d91db81f, transparent 62%),
+    radial-gradient(ellipse at 84% 30%, #2864ee1c, transparent 58%);
+}
+
+@media (max-width: 700px) {
+  body::after { width: 82vw; opacity: .05; }
+}
+
+@media (forced-colors: active) {
+  body::before, body::after { display: none; }
+}

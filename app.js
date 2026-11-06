@@ -113,4 +113,240 @@ $$('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>{
 $$('.motion-toggle').forEach(button=>button.addEventListener('click',()=>{const paused=button.getAttribute('aria-pressed')!=='true';button.setAttribute('aria-pressed',String(paused));button.textContent=paused?'Resume motion ▷':'Pause motion Ⅱ';$('.marquee-track',button.closest('.tech-strip'))?.classList.toggle('paused',paused);}));
 $$('[data-filter-scope]').forEach(scope=>{let category='All';const input=$('[data-search-input]',scope),items=$$('.filter-item',scope),empty=$('.empty-state',scope);const apply=()=>{const query=(input?.value||'').trim().toLowerCase();let count=0;items.forEach(item=>{const show=(category==='All'||item.dataset.category===category)&&item.dataset.search.toLowerCase().includes(query);item.hidden=!show;if(show)count++;});if(empty)empty.hidden=count!==0;};$$('[data-filter]',scope).forEach(button=>button.addEventListener('click',()=>{category=button.dataset.filter;$$('[data-filter]',scope).forEach(b=>b.setAttribute('aria-pressed',String(b===button)));apply();}));input?.addEventListener('input',apply);});
 const form=$('#contact-form');
-if(form){const params=new URLSearchParams(location.search),service=$('#service');if([...service.options].some(o=>o.value===params.get('service')))service.value=params.get('service');let requestId=makeRequestId();form.addEventListener('submit',async e=>{e.preventDefault();if(!form.reportValidity())return;const button=$('button[type=submit]',form),status=$('#form-status');const original=button.innerHTML;button.disabled=true;button.textContent='Saving your enquiry…';status.textContent='';const data=Object.fromEntries(new FormData(form));data.request_id=requestId;data.campaign={};for(const key of ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'])if(params.has(key))data.campaign[key]=params.get(key);try{const response=await fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const result=await response.json();if(!response.ok||!result.ok)throw Error(result.error||'We could not save your enquiry. Please try again.');form.hidden=true;const success=$('#form-success');success.hidden=false;$('.reference',success).textContent='Your reference: '+result.reference;success.focus();}catch(error){status.textContent=error.message||'Connection interrupted. Please try again or email hello@cosmonet.ai.';}finally{button.disabled=false;button.innerHTML=original;}});$('#new-enquiry')?.addEventListener('click',()=>{requestId=makeRequestId();form.reset();form.hidden=false;$('#form-success').hidden=true;$('#form-status').textContent='';$('#name').focus();});}
+if(form){
+  const email=$('#email',form),emailError=$('#email-error',form),button=$('button[type="submit"]',form);
+  const status=$('#form-status'),success=$('#form-success'),retry=$('#form-retry');
+  const verification=$('#form-verification'),verificationStatus=$('#verification-status');
+  const changedNotice=$('#changed-enquiry-notice'),changedDescription=$('#changed-enquiry-description'),sendChanged=$('#send-changed-enquiry');
+  const params=new URLSearchParams(location.search),service=$('#service'),originalButton=button.innerHTML,serverErrors=new Map();
+  let configured=false,initializing=false,submitting=false,turnstileRequired=true,token='',widgetId=null,widgetGeneration=0,scriptPromise;
+  let timeoutMs=15000,cooldownUntil=0,cooldownTimer,requestId=makeRequestId(),lastPayload=null;
+  let uncertainCommit=false,approvedPayload=null,forceNewEnquiry=false;
+  if([...service.options].some(option=>option.value===params.get('service')))service.value=params.get('service');
+  const showStatus=(message,isError=false,focus=false)=>{
+    status.textContent=message;
+    status.classList.toggle('form-error',isError);
+    if(focus)status.focus();
+  };
+  const updateButton=()=>{
+    const remaining=Math.max(0,Math.ceil((cooldownUntil-Date.now())/1000));
+    button.disabled=!configured||initializing||submitting||(turnstileRequired&&!token)||remaining>0;
+    sendChanged.disabled=!configured||initializing||submitting||remaining>0;
+    retry.disabled=initializing||submitting;
+    if(submitting)button.textContent='Saving your enquiry…';
+    else if(initializing)button.textContent='Preparing enquiry form…';
+    else if(remaining)button.textContent=`Please wait (${remaining}s)`;
+    else button.innerHTML=originalButton;
+    form.setAttribute('aria-busy',String(initializing||submitting));
+    if(remaining){
+      clearTimeout(cooldownTimer);
+      cooldownTimer=setTimeout(updateButton,Math.min(1000,Math.max(1,cooldownUntil-Date.now())));
+    }
+  };
+  const readJson=async response=>{
+    if(!response.headers.get('Content-Type')?.toLowerCase().includes('application/json'))return null;
+    try{return await response.json()}catch(err){if(err.name==='AbortError')throw err;return null}
+  };
+  const clearServerError=field=>{
+    const note=serverErrors.get(field);
+    if(!note)return;
+    field.setCustomValidity('');field.removeAttribute('aria-invalid');
+    if(field!==email){
+      note.remove();
+      const descriptions=(field.getAttribute('aria-describedby')||'').split(' ').filter(id=>id&&id!==note.id);
+      if(descriptions.length)field.setAttribute('aria-describedby',descriptions.join(' '));else field.removeAttribute('aria-describedby');
+    }
+    serverErrors.delete(field);
+  };
+  const validateEmail=()=>{
+    const valid=email.validity.valid;
+    emailError.textContent=valid?'':serverErrors.has(email)?email.validationMessage:email.validity.valueMissing?'Enter your email address.':'Enter a valid email address, such as name@company.com.';
+    emailError.hidden=valid;
+    if(valid)email.removeAttribute('aria-invalid');else email.setAttribute('aria-invalid','true');
+    return valid;
+  };
+  const showFieldErrors=fieldErrors=>{
+    let first;
+    if(!fieldErrors||typeof fieldErrors!=='object')return first;
+    for(const [name,message] of Object.entries(fieldErrors)){
+      const field=form.elements.namedItem(name);
+      if(!(field instanceof HTMLInputElement||field instanceof HTMLSelectElement||field instanceof HTMLTextAreaElement)||typeof message!=='string'||!message.trim())continue;
+      clearServerError(field);
+      const note=field===email?emailError:document.createElement('span');
+      if(field!==email){
+        note.id=`${field.id||name}-error`;note.className='field-error';note.setAttribute('aria-live','polite');
+        const anchor=field.type==='checkbox'?field.closest('label'):field;
+        anchor.insertAdjacentElement('afterend',note);
+        field.setAttribute('aria-describedby',[field.getAttribute('aria-describedby'),note.id].filter(Boolean).join(' '));
+      }
+      note.textContent=message.slice(0,300);note.hidden=false;
+      field.setCustomValidity(note.textContent);field.setAttribute('aria-invalid','true');serverErrors.set(field,note);
+      first=first||field;
+    }
+    return first;
+  };
+  const getPayload=()=>{
+    const values=new FormData(form),data={};
+    for(const name of ['name','company','email','service','interest','message','consent','website'])data[name]=String(values.get(name)||'');
+    data.campaign={};
+    for(const key of ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'])if(params.has(key))data.campaign[key]=params.get(key).replace(/[\u0000-\u001f\u007f]/g,'').slice(0,200);
+    return data;
+  };
+  const confirmChangedEnquiry=conflict=>{
+    changedDescription.textContent=conflict?'A previous enquiry already uses this request reference. Sending these details will create a new enquiry.':'Your previous attempt may already have been received. Sending these changed details will create a new enquiry. To retry the earlier enquiry, restore its details.';
+    changedNotice.hidden=false;changedNotice.focus();
+  };
+  const resetVerification=()=>{
+    token='';
+    if(turnstileRequired&&widgetId!==null){
+      verificationStatus.textContent='Complete the verification to send your enquiry.';
+      try{window.turnstile.reset(widgetId)}catch{
+        retry.hidden=false;
+        verificationStatus.textContent='Verification could not restart. Select “Try form again” or email hello@cosmonet.ai.';
+      }
+    }
+    updateButton();
+  };
+  const loadTurnstile=()=>{
+    if(typeof window.turnstile?.render==='function')return Promise.resolve(window.turnstile);
+    if(scriptPromise)return scriptPromise;
+    scriptPromise=new Promise((resolve,reject)=>{
+      const script=document.createElement('script');let settled=false;
+      const finish=err=>{
+        if(settled)return;
+        settled=true;clearTimeout(timer);script.onload=null;script.onerror=null;
+        if(err){script.remove();reject(err)}else resolve(window.turnstile);
+      };
+      const timer=setTimeout(()=>finish(new Error('Verification unavailable')),timeoutMs);
+      script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';script.async=true;
+      script.onload=()=>{
+        if(typeof window.turnstile?.render!=='function')return finish(new Error('Verification unavailable'));
+        if(typeof window.turnstile.ready==='function')window.turnstile.ready(()=>finish());else finish();
+      };
+      script.onerror=()=>finish(new Error('Verification unavailable'));
+      document.head.append(script);
+    }).catch(err=>{scriptPromise=null;throw err});
+    return scriptPromise;
+  };
+  const initializeForm=async()=>{
+    if(initializing||submitting)return;
+    initializing=true;configured=false;token='';retry.hidden=true;
+    const generation=++widgetGeneration;
+    if(widgetId!==null){try{window.turnstile.remove(widgetId)}catch{}widgetId=null}
+    verification.hidden=true;showStatus('Preparing the enquiry form…');updateButton();
+    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
+    try{
+      const response=await fetch('/api/form-config',{headers:{Accept:'application/json'},cache:'no-store',signal:controller.signal,mode:'same-origin',redirect:'error'});
+      const config=await readJson(response);
+      if(!response.ok||config?.available!==true)throw new Error('Form unavailable');
+      turnstileRequired=config.turnstileRequired!==false;
+      timeoutMs=Number.isFinite(config.submissionTimeoutMs)?Math.min(30000,Math.max(1000,config.submissionTimeoutMs)):15000;
+      if(turnstileRequired){
+        if(typeof config.turnstileSiteKey!=='string'||!config.turnstileSiteKey.trim())throw new Error('Verification unavailable');
+        verification.hidden=false;verificationStatus.textContent='Loading verification…';
+        const turnstile=await loadTurnstile();
+        widgetId=turnstile.render('#turnstile-widget',{
+          sitekey:config.turnstileSiteKey,theme:'light',size:'flexible',action:'contact',
+          'response-field':false,'refresh-expired':'manual',
+          callback:responseToken=>{
+            if(generation!==widgetGeneration)return;
+            token=typeof responseToken==='string'?responseToken:'';
+            retry.hidden=Boolean(token);
+            verificationStatus.textContent=token?'Verification complete.':'Complete the verification to send your enquiry.';
+            updateButton();
+          },
+          'expired-callback':()=>{
+            if(generation!==widgetGeneration)return;
+            token='';if(!submitting)resetVerification();else updateButton();
+          },
+          'error-callback':()=>{
+            if(generation!==widgetGeneration)return;
+            token='';retry.hidden=false;
+            verificationStatus.textContent='Verification could not finish. Select “Try form again” or email hello@cosmonet.ai.';
+            updateButton();
+          }
+        });
+        if(widgetId===null||widgetId===undefined)throw new Error('Verification unavailable');
+      }
+      configured=true;showStatus('');
+    }catch{
+      retry.hidden=false;
+      showStatus('The enquiry form is temporarily unavailable. Try form again or email hello@cosmonet.ai.',true);
+      if(!verification.hidden)verificationStatus.textContent='Verification could not load. Select “Try form again” or email hello@cosmonet.ai.';
+    }finally{
+      clearTimeout(timer);initializing=false;updateButton();
+    }
+  };
+  const retryDelay=header=>{
+    const seconds=header&&header.trim()?Number(header):NaN;
+    const milliseconds=Number.isFinite(seconds)?seconds*1000:header?Date.parse(header)-Date.now():NaN;
+    return Number.isFinite(milliseconds)?Math.min(300000,Math.max(1000,milliseconds)):60000;
+  };
+  email.addEventListener('blur',validateEmail);email.addEventListener('invalid',validateEmail);
+  form.addEventListener('input',event=>{
+    const field=event.target,hadError=field.getAttribute('aria-invalid')==='true';
+    clearServerError(field);if(field===email&&hadError)validateEmail();
+  });
+  form.addEventListener('change',event=>clearServerError(event.target));
+  form.addEventListener('reset',event=>{
+    if(submitting){event.preventDefault();return}
+    [...serverErrors.keys()].forEach(clearServerError);
+    email.removeAttribute('aria-invalid');emailError.hidden=true;emailError.textContent='';
+    requestId=makeRequestId();lastPayload=null;uncertainCommit=false;approvedPayload=null;forceNewEnquiry=false;
+    changedNotice.hidden=true;showStatus('');resetVerification();
+  });
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();
+    if(submitting||!form.reportValidity())return;
+    if(!configured||initializing){showStatus('The enquiry form is temporarily unavailable. Try form again or email hello@cosmonet.ai.',true,true);return}
+    if(cooldownUntil>Date.now()){showStatus('Please wait before trying again. Your entered details are still here.',true,true);return}
+    const data=getPayload(),payload=JSON.stringify(data),changed=lastPayload!==null&&lastPayload!==payload;
+    if((forceNewEnquiry||(changed&&uncertainCommit))&&approvedPayload!==payload){confirmChangedEnquiry(forceNewEnquiry);return}
+    if(turnstileRequired&&!token){showStatus('Complete the verification before sending your enquiry.',true,true);return}
+    if(changed||forceNewEnquiry){requestId=makeRequestId();uncertainCommit=false;forceNewEnquiry=false}
+    lastPayload=payload;approvedPayload=null;changedNotice.hidden=true;
+    data.request_id=requestId;data.turnstile_token=token;
+    token='';submitting=true;showStatus('');updateButton();
+    const fields=$$('input,select,textarea',form),disabled=fields.map(field=>field.disabled);
+    fields.forEach(field=>field.disabled=true);
+    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);
+    try{
+      const response=await fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(data),signal:controller.signal,mode:'same-origin',redirect:'error'});
+      if(response.status===429){
+        cooldownUntil=Date.now()+retryDelay(response.headers.get('Retry-After'));
+        showStatus('Too many attempts. Please wait before trying again, or email hello@cosmonet.ai. Your entered details are still here.',true,true);return;
+      }
+      const result=response.status<500?await readJson(response):null;
+      if(!response.ok||result?.ok!==true||result?.queued!==true||typeof result.reference!=='string'||!result.reference.trim()){
+        uncertainCommit=uncertainCommit||response.status>=500||(response.ok&&result?.ok!==false);
+        const first=showFieldErrors(result?.fieldErrors);
+        const formError=typeof result?.fieldErrors?.form==='string'?result.fieldErrors.form.slice(0,300):'';
+        let message='We could not confirm receipt of your enquiry. Retry without changing your details, or email hello@cosmonet.ai.';
+        if(response.status===400||response.status===422)message=first?'Please check the highlighted details and complete verification again before retrying.':formError||'We could not accept your enquiry. Check your details, complete verification again, or email hello@cosmonet.ai.';
+        else if(response.status===403)message='Your request could not be verified. Complete verification again, or email hello@cosmonet.ai.';
+        else if(response.status===409){message='This enquiry request was already used for different details. You can send these details as a new enquiry.';forceNewEnquiry=true}
+        else if(response.status===503)message='The enquiry service is temporarily unavailable. Retry without changing your details, or email hello@cosmonet.ai.';
+        else if(response.status>=500)message='We could not confirm receipt because the enquiry service returned an error. Retry without changing your details, or email hello@cosmonet.ai.';
+        showStatus(message,true,!first);
+        if(first){fields.forEach((field,index)=>field.disabled=disabled[index]);first.focus()}
+        if(forceNewEnquiry)confirmChangedEnquiry(true);
+        return;
+      }
+      uncertainCommit=false;
+      $('.reference',success).textContent='Your reference: '+result.reference.slice(0,100);
+      form.hidden=true;success.hidden=false;success.focus();
+    }catch(err){
+      uncertainCommit=true;
+      showStatus(err.name==='AbortError'?'The connection took too long. Your enquiry may already have been received. Retry without changing your details to check the same enquiry, or email hello@cosmonet.ai.':'We could not confirm receipt of your enquiry. Retry without changing your details to check the same enquiry, or email hello@cosmonet.ai.',true,true);
+    }finally{
+      clearTimeout(timer);fields.forEach((field,index)=>field.disabled=disabled[index]);
+      submitting=false;resetVerification();
+    }
+  });
+  sendChanged.addEventListener('click',()=>{
+    if(submitting||!form.reportValidity())return;
+    approvedPayload=JSON.stringify(getPayload());form.requestSubmit();
+  });
+  $('#new-enquiry')?.addEventListener('click',()=>{success.hidden=true;form.hidden=false;form.reset();$('#name').focus()});
+  retry.addEventListener('click',initializeForm);initializeForm();
+}
