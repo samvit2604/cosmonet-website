@@ -1,0 +1,130 @@
+/* The recruitment scene shares the site's paper background and brand colours. */
+.page-hero.recruitment-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 28px 0 48px;
+  background-color: var(--editorial-paper, #f5f2ec);
+  color: var(--editorial-ink, #28222b);
+  --copy-color: #5a515c;
+  --copy-muted: #6b5f70;
+}
+.recruitment-hero > .wrap { position: relative; z-index: 2; pointer-events: none; }
+.recruitment-hero .breadcrumbs,
+.recruitment-hero .recruitment-hero-copy { pointer-events: auto; }
+.recruitment-hero .breadcrumbs { margin-bottom: 32px; }
+.recruitment-hero .page-hero-grid {
+  grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+  gap: 32px;
+  min-height: 540px;
+}
+.recruitment-hero .recruitment-hero-copy { width: 100%; min-width: 0; max-width: 570px; }
+.page-hero.recruitment-hero h1 {
+  font-size: clamp(46px, 4.05vw, 64px);
+  line-height: 1.09;
+  letter-spacing: -.055em;
+}
+.recruitment-hero .lead {
+  --copy-color: #5a515c;
+  --copy-size: 19px;
+  max-width: 535px;
+  margin-top: 28px;
+}
+.recruitment-hero .button.primary { margin-top: 30px; }
+.recruitment-hero .recruitment-hero-scene {
+  position: absolute;
+  z-index: 0;
+  inset: 0 max(0px, calc((100vw - 1440px) / 2)) 0 auto;
+  width: 56%;
+  max-width: 800px;
+  height: 100%;
+  min-width: 0;
+  margin: 0;
+  pointer-events: none;
+}
+.recruitment-hero-viewport { position: absolute; inset: 74px 0 58px; }
+.recruitment-hero-viewport [data-recruitment-canvas],
+.recruitment-hero-viewport [data-recruitment-poster] {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+.recruitment-hero-poster { background: url("/assets/recruitment-hero.webp?v=3") center / 100% auto no-repeat; }
+.recruitment-hero-viewport [data-recruitment-canvas] { opacity: 0; transition: opacity 240ms ease; }
+.recruitment-hero-viewport [data-recruitment-poster] { opacity: 1; transition: opacity 240ms ease; }
+.recruitment-scene-ready .recruitment-hero-viewport [data-recruitment-canvas] { opacity: 1; }
+.recruitment-scene-ready .recruitment-hero-viewport [data-recruitment-poster] { opacity: 0; }
+.recruitment-scene-fallback .recruitment-hero-poster { background: url("/assets/recruitment-hero.webp?v=3") center / contain no-repeat; }
+.recruitment-hero-viewport [data-recruitment-canvas] { opacity: 0; }
+.recruitment-scene-fallback .recruitment-hero-viewport [data-recruitment-poster] { opacity: 1; }
+.recruitment-hero-scene figcaption {
+  position: absolute;
+  z-index: 3;
+  right: 40px;
+  bottom: 14px;
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: auto;
+}
+.recruitment-hero-motion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 13px;
+  border: 1px solid #9b86b14d;
+  border-radius: 6px;
+  color: #6b567b;
+  background: #f5f2ecdf;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.recruitment-hero-motion:hover { color: #5c337e; border-color: #9b78b6; background: #eee8f3; }
+.recruitment-hero-motion[hidden] { display: none; }
+.recruitment-hero-motion svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.recruitment-hero-motion .recruitment-motion-play { display: none; }
+.recruitment-hero-motion[aria-pressed="true"] .recruitment-motion-pause { display: none; }
+.recruitment-hero-motion[aria-pressed="true"] .recruitment-motion-play { display: block; }
+@media (max-width: 1200px) {
+  .recruitment-hero .page-hero-grid { min-height: 520px; gap: 26px; }
+  .page-hero.recruitment-hero h1 { font-size: clamp(43px, 4.3vw, 52px); }
+  .recruitment-hero .lead { --copy-size: 18px; }
+  .recruitment-hero-viewport { inset: 72px 0 62px; }
+}
+@media (max-width: 900px) {
+  .page-hero.recruitment-hero { padding-bottom: 25px; }
+  .recruitment-hero .page-hero-grid { display: block; min-height: 0; }
+  .recruitment-hero .recruitment-hero-copy { max-width: 690px; }
+  .page-hero.recruitment-hero h1 { max-width: 690px; font-size: clamp(44px, 6.3vw, 58px); }
+  .recruitment-hero .lead { max-width: 660px; }
+  .recruitment-hero .recruitment-hero-scene { position: relative; inset: auto; width: 100%; max-width: 760px; height: auto; margin: 20px auto 0; }
+  .recruitment-hero-viewport { position: relative; inset: auto; width: 100%; aspect-ratio: 1.35; }
+  .recruitment-hero-scene figcaption { position: relative; right: auto; bottom: auto; padding: 0 36px; }
+}
+@media (max-width: 700px) {
+  .page-hero.recruitment-hero { padding-top: 24px; padding-bottom: 22px; }
+  .recruitment-hero .breadcrumbs { margin-bottom: 32px; font-size: 12px; line-height: 1.6; gap: 10px; }
+  .page-hero.recruitment-hero .eyebrow { font-size: 10px !important; margin-bottom: 21px; }
+  .page-hero.recruitment-hero h1 { font-size: clamp(38px, 9.7vw, 52px); line-height: 1.1; letter-spacing: -.05em; }
+  .recruitment-hero .lead { --copy-size: 17px; margin-top: 24px; }
+  .recruitment-hero .button.primary { margin-top: 24px; margin-right: 0; }
+  .recruitment-hero .recruitment-hero-scene { margin-top: 18px; }
+  .recruitment-hero-viewport { aspect-ratio: 1.12; }
+  .recruitment-hero-scene figcaption { padding: 0 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .recruitment-hero-motion { display: none; }
+  .recruitment-hero-viewport [data-recruitment-canvas],
+  .recruitment-hero-viewport [data-recruitment-poster] { transition: none; }
+}
+@media (forced-colors: active) {
+  .recruitment-hero-viewport { opacity: .45; }
+  .recruitment-hero-motion { border-color: ButtonText; color: ButtonText; background: ButtonFace; }
+}

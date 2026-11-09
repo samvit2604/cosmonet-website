@@ -1,0 +1,118 @@
+/* The GCC globe shares the native scene pattern of the MVP/cloud heroes. */
+.page-hero.gcc-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 26px 0 48px;
+  color: #faf6ff;
+  --copy-color: #d1c7df;
+  --copy-muted: #b8a9cb;
+  background: radial-gradient(ellipse at 0 0, #a4006850, transparent 42%),
+    radial-gradient(ellipse at 0 100%, #003b9545, transparent 46%), #090314;
+}
+.gcc-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(#ac72d50a 1px, transparent 1px), linear-gradient(90deg, #ac72d50a 1px, transparent 1px);
+  background-size: 82px 82px;
+  mask-image: linear-gradient(90deg, #0009, #000, #0004);
+}
+.gcc-hero > .wrap { position: relative; z-index: 2; pointer-events: none; }
+.gcc-hero .breadcrumbs, .gcc-hero-copy { pointer-events: auto; }
+.page-hero.gcc-hero .breadcrumbs, .page-hero.gcc-hero .breadcrumbs a { color: #b8a9cb; }
+.gcc-hero .breadcrumbs { margin-bottom: 34px; }
+.gcc-hero .page-hero-grid {
+  grid-template-columns: minmax(0, .95fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: 30px;
+  min-height: 660px;
+}
+.gcc-hero-copy { position: relative; z-index: 1; min-width: 0; max-width: 510px; }
+.page-hero.gcc-hero .eyebrow { color: #d7a6ed; font-size: 11px !important; margin-bottom: 25px; }
+.page-hero.gcc-hero h1 { color: #faf6ff; font-size: clamp(48px, 4.45vw, 64px); line-height: 1.08; letter-spacing: -.055em; }
+.page-hero.gcc-hero h1 em { background-image: linear-gradient(110deg, #ff54d4, #bc70ff 54%, #588aff); }
+.gcc-hero .lead { --copy-size: 18px; --copy-color: #d1c7df; max-width: 490px; margin-top: 25px; }
+.gcc-hero .button.primary { margin-top: 28px; }
+.gcc-hero-scene { position: absolute; inset: 0 0 0 auto; z-index: 0; min-width: 0; width: 58%; max-width: 1140px; height: 100%; margin: 0; }
+.gcc-hero-viewport {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  isolation: isolate;
+}
+.gcc-hero-viewport [data-gcc-canvas],
+.gcc-hero-viewport img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gcc-hero-viewport [data-gcc-canvas] { opacity: 0; transition: opacity 240ms ease; }
+.gcc-hero-viewport img { opacity: 1; transition: opacity 240ms ease; }
+.gcc-scene-ready .gcc-hero-viewport [data-gcc-canvas] { opacity: 1; }
+.gcc-scene-ready .gcc-hero-viewport img { opacity: 0; }
+.gcc-scene-fallback .gcc-hero-viewport [data-gcc-canvas] { opacity: 0; }
+.gcc-scene-fallback .gcc-hero-viewport img { opacity: 1; }
+.gcc-hero-scene figcaption { position: absolute; right: 24px; bottom: 18px; z-index: 3; display: flex; justify-content: flex-end; min-height: 44px; }
+.gcc-hero-motion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 13px;
+  border: 1px solid #b4a1bf70;
+  border-radius: 6px;
+  color: #dfd0ed;
+  background: #130923de;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.gcc-hero-motion[hidden] { display: none; }
+.gcc-hero-motion:hover { color: #fff; border-color: #d88af6; background: #241137; }
+.gcc-hero-motion svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.gcc-motion-play { display: none; }
+.gcc-hero-motion[aria-pressed="true"] .gcc-motion-pause { display: none; }
+.gcc-hero-motion[aria-pressed="true"] .gcc-motion-play { display: block; }
+@media (max-width: 1200px) {
+  .gcc-hero .page-hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 22px; min-height: 550px; }
+  .gcc-hero-scene { width: 52%; }
+  .page-hero.gcc-hero h1 { font-size: clamp(46px, 4.8vw, 58px); }
+  .gcc-hero .lead { --copy-size: 17px; }
+}
+@media (max-width: 900px) {
+  .page-hero.gcc-hero { padding-bottom: 28px; }
+  .gcc-hero .page-hero-grid { grid-template-columns: 1fr; min-height: 0; gap: 16px; }
+  .gcc-hero-copy { max-width: 650px; }
+  .page-hero.gcc-hero h1 { max-width: 650px; font-size: clamp(44px, 6.5vw, 58px); }
+  .gcc-hero .lead { max-width: 620px; }
+  .gcc-hero-scene { position: relative; inset: auto; width: 100%; max-width: 700px; height: auto; margin: 18px auto 0; }
+  .gcc-hero-viewport { position: relative; inset: auto; width: 100%; height: auto; margin: 0; aspect-ratio: 1.4; }
+  .gcc-hero-scene figcaption { position: relative; right: auto; bottom: auto; padding: 0 24px; }
+}
+@media (max-width: 700px) {
+  .page-hero.gcc-hero { padding-top: 24px; padding-bottom: 24px; }
+  .gcc-hero .breadcrumbs { margin-bottom: 30px; font-size: 12px; line-height: 1.6; gap: 10px; }
+  .page-hero.gcc-hero .eyebrow { margin-bottom: 21px; font-size: 10px !important; }
+  .page-hero.gcc-hero h1 { font-size: clamp(39px, 10vw, 52px); line-height: 1.09; letter-spacing: -.05em; }
+  .gcc-hero .lead { --copy-size: 17px; margin-top: 24px; }
+  .gcc-hero .button.primary { margin-top: 24px; margin-right: 0; }
+  .gcc-hero-viewport { width: 100%; margin: 0; aspect-ratio: 1.18; }
+  .gcc-hero-scene figcaption { padding: 0 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gcc-hero-motion { display: none; }
+  .gcc-hero-viewport [data-gcc-canvas], .gcc-hero-viewport img { transition: none; }
+}
+@media (forced-colors: active) {
+  .gcc-hero-viewport { opacity: .5; }
+  .gcc-hero-motion { border-color: ButtonText; color: ButtonText; background: ButtonFace; }
+}
