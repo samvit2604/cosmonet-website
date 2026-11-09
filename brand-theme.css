@@ -101,6 +101,41 @@ main .eyebrow { color: var(--brand-link-light); }
     radial-gradient(ellipse at 84% 72%, #2864ee0c, transparent 60%);
 }
 
+body[data-page="products"] .page-hero {
+  background:
+    radial-gradient(ellipse at 72% 25%, #f6e1f3 0%, transparent 48%),
+    radial-gradient(ellipse at 92% 78%, #cbd9ff 0%, transparent 45%),
+    linear-gradient(110deg, #fcfafb 0%, #f4edfa 48%, #e6ddfa 100%);
+}
+
+@media (min-width: 701px) {
+  body[data-page="products"] .page-hero-grid:has(.page-hero-image) {
+    grid-template-columns: 1fr 1.3fr;
+    gap: 30px;
+  }
+}
+
+body[data-page="products"] .page-hero-image {
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+body[data-page="products"] .page-hero-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent),
+    linear-gradient(to bottom, transparent, #000 5%, #000 95%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent),
+    linear-gradient(to bottom, transparent, #000 5%, #000 95%, transparent);
+  mask-composite: intersect;
+}
+
 .cta {
   background-image:
     radial-gradient(ellipse at 14% 80%, #d91db81f, transparent 62%),
@@ -109,6 +144,10 @@ main .eyebrow { color: var(--brand-link-light); }
 
 @media (max-width: 700px) {
   body::after { width: 82vw; opacity: .05; }
+  body[data-page="products"] .page-hero-grid > .page-hero-image {
+    width: calc(100% + 24px);
+    margin-left: -12px;
+  }
 }
 
 @media (forced-colors: active) {

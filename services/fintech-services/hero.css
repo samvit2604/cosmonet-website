@@ -1,0 +1,21 @@
+.fintech-hero .page-hero-image {
+  aspect-ratio: 768 / 840;
+  max-height: 580px;
+  justify-self: center;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.fintech-hero .page-hero-image img {
+  object-fit: contain;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
+    linear-gradient(to bottom, transparent, #000 5%, #000 95%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
+    linear-gradient(to bottom, transparent, #000 5%, #000 95%, transparent);
+  mask-composite: intersect;
+}
+
+@media (max-width: 700px) {
+  .fintech-hero .page-hero-image { aspect-ratio: 768 / 840; max-height: none; }
+}
