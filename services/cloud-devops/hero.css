@@ -4,17 +4,19 @@
   isolation: isolate;
   overflow: hidden;
   padding: 26px 0 48px;
-  color: #f9f6fa;
-  background: radial-gradient(ellipse at 83% 38%, #42215d66, transparent 53%),
-    radial-gradient(ellipse at 59% 80%, #84216722, transparent 50%), #0b0911;
-  --copy-color: #c9c2ce;
-  --copy-muted: #b5a8c0;
+  color: #171522;
+  background:
+    url('/assets/cloud-hero-background.svg') center bottom / cover no-repeat,
+    radial-gradient(ellipse at 82% 55%, #ded3f8 0%, transparent 53%),
+    linear-gradient(110deg, #fff 10%, #fcfaff 48%, #f0ecfc 100%);
+  --copy-color: #45414f;
+  --copy-muted: #686373;
 }
 .cloud-hero > .wrap { position: relative; z-index: 2; pointer-events: none; }
 .cloud-hero .breadcrumbs,
 .cloud-hero .cloud-hero-copy { pointer-events: auto; }
-.cloud-hero .breadcrumbs { margin-bottom: 28px; color: #b5a8c0; }
-.cloud-hero .breadcrumbs a { color: #c9bfd0; }
+.cloud-hero .breadcrumbs { margin-bottom: 28px; color: #686373; }
+.cloud-hero .breadcrumbs a { color: #686373; }
 .cloud-hero .page-hero-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.18fr);
@@ -23,24 +25,24 @@
   gap: 34px;
 }
 .cloud-hero .cloud-hero-copy { width: 100%; max-width: 490px; min-width: 0; }
-.page-hero.cloud-hero .eyebrow { color: #d4acdf; margin-bottom: 25px; font-size: 11px !important; }
+.page-hero.cloud-hero .eyebrow { color: #7433bb; margin-bottom: 25px; font-size: 11px !important; }
 .page-hero.cloud-hero h1 {
   max-width: 510px;
-  color: #f9f6fa;
+  color: #171522;
   font-size: clamp(52px, 4.45vw, 64px);
   line-height: 1.075;
   letter-spacing: -.055em;
 }
 .page-hero.cloud-hero h1 em {
-  background-image: linear-gradient(110deg, #f0a8df, #c3a0fc 54%, #9bacff);
+  background-image: linear-gradient(110deg, #d10bb9, #8b30dc 54%, #6757e6);
 }
-.cloud-hero .lead { --copy-size: 18px; --copy-color: #c9c2ce; margin-top: 25px; max-width: 490px; }
+.cloud-hero .lead { --copy-size: 18px; --copy-color: #45414f; margin-top: 25px; max-width: 490px; }
 .cloud-hero .button.primary { margin-top: 28px; }
 .cloud-hero .tag-row { gap: 8px; margin-top: 24px; }
 .page-hero.cloud-hero .tag-row > span {
-  color: #c9bfd2;
-  border-color: #b59ec94d;
-  background: #16101f80;
+  color: #5a416b;
+  border-color: #a690b9;
+  background: #ffffff80;
   font-size: 12px;
 }
 .cloud-hero .cloud-hero-scene {
@@ -92,15 +94,15 @@
   gap: 8px;
   min-height: 44px;
   padding: 10px 13px;
-  border: 1px solid #b6a1c74d;
+  border: 1px solid #aa96bd;
   border-radius: 6px;
-  color: #e3d8ea;
-  background: #151019df;
+  color: #4c355b;
+  background: #ffffffd9;
   font-size: 12px;
   line-height: 1.4;
   cursor: pointer;
 }
-.cloud-hero-motion:hover { color: #ffffff; border-color: #d2b5e487; background: #26172d; }
+.cloud-hero-motion:hover { color: #3a2450; border-color: #80609b; background: #fff; }
 .cloud-hero-motion svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .cloud-hero-motion .cloud-motion-play { display: none; }
 .cloud-hero-motion[aria-pressed="true"] .cloud-motion-pause { display: none; }

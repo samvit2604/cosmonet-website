@@ -1,0 +1,41 @@
+.page-hero.security-hero {
+  background:
+    radial-gradient(ellipse at 72% 42%, #7134c817, transparent 55%),
+    radial-gradient(ellipse at 91% 70%, #2765de0c, transparent 50%),
+    #090b15;
+  color: #fff;
+}
+
+.security-hero .breadcrumbs,
+.security-hero .breadcrumbs a { color: #c3bdd5; }
+.page-hero.security-hero .eyebrow { color: #d6b3f4; }
+.security-hero .lead { --copy-color: #ded8eb; color: #ded8eb; }
+.page-hero.security-hero .tag-row > span { color: #ded4ee; border-color: #685775; }
+.page-hero.security-hero h1 {
+  font-size: clamp(43px, 4.8vw, 70px);
+  letter-spacing: -3.6px;
+  line-height: 1.09;
+}
+.page-hero.security-hero h1 em { font-style: normal; }
+
+.security-hero .security-visual {
+  position: relative;
+  align-self: stretch;
+  min-height: 490px;
+}
+.security-hero .cosmo-scene {
+  inset: 0 -7% 0 -7%;
+  z-index: 0;
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.security-hero .cosmo-motion {
+  position: absolute;
+  right: 0;
+  bottom: 12px;
+  z-index: 3;
+}
+
+@media (max-width: 700px) {
+  .security-hero .security-visual { min-height: 0; aspect-ratio: 1.2; }
+  .page-hero.security-hero h1 { font-size: 48px; letter-spacing: -2.5px; }
+}
