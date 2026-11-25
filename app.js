@@ -3,6 +3,21 @@ const $=(selector,root=document)=>root.querySelector(selector);
 const $$=(selector,root=document)=>[...root.querySelectorAll(selector)];
 // Navigation stays usable with keyboard, touch and progressive enhancement.
 const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+const finePointer=window.matchMedia('(hover: hover) and (pointer: fine)');
+if(finePointer.matches){
+  const cursor=document.createElement('span');
+  cursor.className='shooting-star-cursor';
+  cursor.setAttribute('aria-hidden','true');
+  document.body.append(cursor);
+  document.body.classList.add('has-shooting-star-cursor');
+  window.addEventListener('pointermove',event=>{
+    if(event.pointerType!=='mouse'){cursor.classList.remove('is-visible');return}
+    cursor.style.transform=`translate3d(${event.clientX-34}px,${event.clientY-34}px,0)`;
+    cursor.classList.add('is-visible');
+  },{passive:true});
+  window.addEventListener('pointerleave',()=>cursor.classList.remove('is-visible'));
+  window.addEventListener('blur',()=>cursor.classList.remove('is-visible'));
+}
 const menu=$('.menu-toggle'),mobile=$('#mobile-menu'),header=$('.header');
 const setMobile=open=>{
   menu.setAttribute('aria-expanded',String(open));

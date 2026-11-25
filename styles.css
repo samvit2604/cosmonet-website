@@ -66,3 +66,9 @@
 .form-card .enquiry-notice h3{font-size:20px;line-height:1.4;margin:0 0 12px}
 .form-card .enquiry-notice p{font-size:14px;line-height:1.7;margin:0 0 16px}
 .form-card .enquiry-notice:focus{outline:2px solid #a783ff;outline-offset:4px}
+.has-shooting-star-cursor{cursor:none}
+.has-shooting-star-cursor a,.has-shooting-star-cursor button,.has-shooting-star-cursor summary,.has-shooting-star-cursor [role=button]{cursor:none}
+.has-shooting-star-cursor input,.has-shooting-star-cursor textarea,.has-shooting-star-cursor [contenteditable=true]{cursor:text}
+.shooting-star-cursor{position:fixed;z-index:10000;top:0;left:0;width:68px;height:68px;pointer-events:none;background:url('/assets/shooting-star-cursor.png') center/contain no-repeat;opacity:0;transition:opacity .12s ease;will-change:transform}
+.shooting-star-cursor.is-visible{opacity:1}
+@media(prefers-reduced-motion:reduce){.shooting-star-cursor{transition:none}}
